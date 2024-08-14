@@ -1,0 +1,479 @@
+-- Have Fun!
+-- IT TAKE MY SELF 1 HOUR TO RESCRIPT THIS CAUSE SKISPLOIT CANT RUN THE COREGUI
+-- Re script by Alex games #9120
+-- By illremember#3799
+
+-- Important Loading
+trueSettings = {
+ commandPrefix = ";";
+ hotkeys = {};
+ fchotkeymode = "unfc";
+}
+
+-- Important Variables
+gsPlayers = game:GetService("Players")
+gsWorkspace = game:GetService("Workspace")
+gsLighting = game:GetService("Lighting")
+gsReplicatedStorage = game:GetService("ReplicatedStorage")
+gsCoreGui = game:GetService("CoreGui")
+gsTween = game:GetService("TweenService")
+gsHttp = game:GetService("HttpService")
+
+LP = gsPlayers.LocalPlayer
+Mouse = LP:GetMouse()
+
+defaultSettings = gsHttp:JSONEncode(trueSettings)
+function CreateSave()
+ writefile("Shattervast.txt", defaultSettings)
+ wait(0.5)
+ local content = readfile("Shattervast.txt")
+ local trueValue = gsHttp:JSONDecode(content)
+ commandPrefix = trueValue.commandPrefix
+ hotkeys = trueValue.hotkeys
+ fchotkeymode = trueValue.fchotkeymode
+end
+function fullUpdate()
+ local updatedSettings = {
+  commandPrefix = commandPrefix;
+  hotkeys = hotkeys;
+  fchotkeymode = fchotkeymode;
+ }
+ local fullUPDATED = gsHttp:JSONEncode(updatedSettings)
+ wait(0.2)
+ writefile("Shattervast.txt", fullUPDATED)
+end
+if writefile ~= nil then
+ function builder()
+  local TESTsave = readfile("Shattervast.txt")
+  if TESTsave == nil then
+   return false
+  else
+   return true
+  end
+ end
+ local success, message = pcall(builder)
+ if success == true then
+  function reader()
+   local content = readfile("Shattervast.txt")
+   local trueValue = gsHttp:JSONDecode(content)
+   commandPrefix = trueValue.commandPrefix
+   hotkeys = trueValue.hotkeys
+   if trueValue.fchotkeymode == nil then
+    fchotkeymode = "unfc"
+    fullUpdate()
+   else
+    fchotkeymode = trueValue.fchotkeymode
+   end
+  end
+  reader()
+ elseif success == false then
+  CreateSave()
+ end
+else
+ commandPrefix = ";"
+ hotkeys = {}
+ fchotkeymode = "unfc"
+end
+
+CurrentGravity = gsWorkspace.Gravity
+CurrentWalkspeed = LP.Character.Humanoid.WalkSpeed
+CurrentJumppower = LP.Character.Humanoid.JumpPower
+CurrentHipheight = LP.Character.Humanoid.HipHeight
+CurrentNormal = LP.DevCameraOcclusionMode
+
+gsWorkspace.Camera.Changed:Connect(function()
+ gsWorkspace.Camera.FieldOfView = 70
+end)
+
+-- Important Functions
+function view(plr)
+ if plr.Character.Humanoid ~= nil then
+  gsWorkspace.CurrentCamera.CameraSubject = plr.Character.Humanoid
+ else
+  gsWorkspace.CurrentCamera.CameraSubject = plr.Character.Head
+ end
+end
+function unlockWS()
+ for i,part in pairs(gsWorkspace:GetDescendants()) do
+  if part:IsA("Part") then
+   part.Locked = false
+  end
+ end
+end
+function lockWS()
+ for i,part in pairs(gsWorkspace:GetDescendants()) do
+  if part:IsA("Part") then
+   part.Locked = true
+  end
+ end
+end
+function FEGodmode()
+ local changeview = false
+ if gsWorkspace.CurrentCamera.CameraSubject == LP.Character.Humanoid or gsWorkspace.CurrentCamera.CameraSubject == LP.Character then
+  changeview = true
+ end
+ LP.Character.Humanoid.Name = 1
+ local l = LP.Character["1"]:Clone()
+ l.Parent = LP.Character
+ l.Name = "Humanoid"
+ wait(0.1)
+ LP.Character["1"]:Destroy()
+ if changeview then
+  game:GetService("Workspace").CurrentCamera.CameraSubject = LP.Character
+ end
+ LP.Character.Animate.Disabled = true
+ wait(0.1)
+ LP.Character.Animate.Disabled = false
+ LP.Character.Humanoid.DisplayDistanceType = "None"
+end
+function RocketPropulsion(maxthrust,maxspeed,thrustp,targetplr,name)
+ local l = Instance.new("RocketPropulsion")
+ l.Parent = LP.Character.HumanoidRootPart
+ l.CartoonFactor = 1
+ l.MaxThrust = maxthrust
+ l.MaxSpeed = maxspeed
+ l.ThrustP = thrustp
+ l.Name = name
+ l.Target = targetplr.Character.HumanoidRootPart
+ l:Fire()
+end
+function createIntro(style, msg, length)
+ if gsCoreGui:FindFirstChild("Notification") then
+  gsCoreGui:FindFirstChild("Notification"):Destroy()
+ end
+ local info = "http://www.roblox.com/asset/?id=1281284684"
+ local warning = "http://www.roblox.com/asset/?id=1281286925"
+ if style == "info" then
+  style = info
+ elseif style == "warning" then
+  style = warning
+ end
+ local Notification = Instance.new("ScreenGui")
+ local Frame = Instance.new("Frame")
+ local TextLabel = Instance.new("TextLabel")
+ local IMAGE = Instance.new("ImageLabel")
+ Notification.Name = "Notification"
+ Notification.Parent = game.Players.LocalPlayer.PlayerGui
+ Notification.ResetOnSpawn = false
+ Frame.Parent = Notification
+ Frame.BackgroundColor3 = Color3.new(0.164706, 0.164706, 0.164706)
+ Frame.BackgroundTransparency = 0.20000000298023
+ Frame.BorderSizePixel = 0
+ Frame.Position = UDim2.new(0, 0, -0.2, 0)
+ Frame.Size = UDim2.new(1, 0, 0, 30)
+ TextLabel.Parent = Frame
+ TextLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+ TextLabel.BackgroundTransparency = 1
+ TextLabel.Size = UDim2.new(1, 0, 1, 0)
+ TextLabel.Font = Enum.Font.SourceSansLight
+ TextLabel.Text = msg
+ TextLabel.TextColor3 = Color3.new(0.905882, 0.905882, 0.905882)
+ TextLabel.TextScaled = true
+ TextLabel.TextSize = 14
+ TextLabel.TextWrapped = true
+ IMAGE.Parent = Frame
+ IMAGE.BackgroundTransparency = 1
+ IMAGE.Size = UDim2.new(0, 50, 0, 50)
+ IMAGE.Position = UDim2.new(0.1, 0, 0, 0)
+ IMAGE.Image = style
+ local Intro = Instance.new("ScreenGui")
+ local Frame2 = Instance.new("Frame")
+ local IMAGE2 = Instance.new("ImageLabel")
+ Intro.Name = "Intro"
+ Intro.Parent = game.Players.LocalPlayer.PlayerGui
+ Intro.ResetOnSpawn = false
+ Frame2.Parent = Intro
+ Frame2.BackgroundTransparency = 1
+ Frame2.BorderSizePixel = 0
+ Frame2.Position = UDim2.new(0, 0, -0.2, 0)
+ Frame2.Size = UDim2.new(1, 0, 0, 30)
+ IMAGE2.Parent = Frame
+ IMAGE2.BackgroundTransparency = 1
+ IMAGE2.AnchorPoint = Vector2.new(0.5, 0)
+ IMAGE2.Size = UDim2.new(0, 240, 0, 120)
+ IMAGE2.Position = UDim2.new(0.5, 0, 0, 0)
+ IMAGE2.Image = "http://www.roblox.com/asset/?id=1795472522"
+ Frame2:TweenPosition(UDim2.new(0, 0, 0, 200), "Out", "Quad", 1.5)
+ Frame:TweenPosition(UDim2.new(0, 0, 0, 0), "Out", "Quad", 1.5)
+ wait(length)
+ pcall(function()
+  Frame:TweenPosition(UDim2.new(0, 0, -1.5, 0), "Out", "Quad", 3)
+  Frame2:TweenPosition(UDim2.new(0, 0, -1.5, 0), "Out", "Quad", 3)
+ end)
+ wait(3.01)
+ Intro:Destroy()
+ Notification:Destroy()
+end
+function Notification(style, msg, length)
+ if gsCoreGui:FindFirstChild("Notification") then
+  gsCoreGui:FindFirstChild("Notification"):Destroy()
+ end
+ local info = "http://www.roblox.com/asset/?id=1281284684"
+ local warning = "http://www.roblox.com/asset/?id=1281286925"
+ if style == "info" then
+  style = info
+ elseif style == "warning" then
+  style = warning
+ end
+ local Notification = Instance.new("ScreenGui")
+ local Frame = Instance.new("Frame")
+ local TextLabel = Instance.new("TextLabel")
+ local IMAGE = Instance.new("ImageLabel")
+ Notification.Name = "Notification"
+ Notification.Parent = game.Players.LocalPlayer.PlayerGui
+ Notification.ResetOnSpawn = false
+ Frame.Parent = Notification
+ Frame.BackgroundColor3 = Color3.new(0.164706, 0.164706, 0.164706)
+ Frame.BackgroundTransparency = 0.20000000298023
+ Frame.BorderSizePixel = 0
+ Frame.Position = UDim2.new(0, 0, -0.2, 0)
+ Frame.Size = UDim2.new(1, 0, 0, 30)
+ TextLabel.Parent = Frame
+ TextLabel.BackgroundColor3 = Color3.new(1, 1, 1)
+ TextLabel.BackgroundTransparency = 1
+ TextLabel.Size = UDim2.new(1, 0, 1, 0)
+ TextLabel.Font = Enum.Font.SourceSansLight
+ TextLabel.Text = msg
+ TextLabel.TextColor3 = Color3.new(0.905882, 0.905882, 0.905882)
+ TextLabel.TextScaled = true
+ TextLabel.TextSize = 14
+ TextLabel.TextWrapped = true
+ IMAGE.Parent = Frame
+ IMAGE.BackgroundTransparency = 1
+ IMAGE.Size = UDim2.new(0, 50, 0, 50)
+ IMAGE.Position = UDim2.new(0.1, 0, 0, 0)
+ IMAGE.Image = style
+ Frame:TweenPosition(UDim2.new(0, 0, 0, 0), "Out", "Quad", 1.5)
+ wait(length)
+ pcall(function()
+  Frame:TweenPosition(UDim2.new(0, 0, -1.5, 0), "Out", "Quad", 3)
+ end)
+ wait(3.01)
+ Notification:Destroy()
+end
+function hasTools()
+ local a = false
+ local b = false
+ for i,v in pairs(LP.Character:GetDescendants()) do
+  if v:IsA("Tool") then
+   if v ~= nil then
+    a = true
+   else
+    a = false
+   end
+  end
+ end
+ for i,k in pairs(LP.Backpack:GetDescendants()) do
+  if k:IsA("Tool") then
+   if k ~= nil then
+    b = true
+   else
+    b = false
+   end
+  end
+ end
+ return a or b
+end
+Compliments = {" is the coolest person in this server!", ", I really like your avatar!", ", I really want to be your friend!", " is truly amazing. Truly!", " is incredible!", ", you are my favourite here!!", ", I am complimenting you right now at this very moment.", " you are really awesome", " when will you be my friend!?", " is such a great person", " is a fantastic person!"}
+function complimentplr(player)
+ local plrName = player.Name
+ game:GetService("ReplicatedStorage").DefaultChatSystemChatEvents.SayMessageRequest:FireServer(plrName..Compliments[math.random(1, #Compliments)], "All")
+end
+function createINFO(player)
+ local InfoGUIv2 = Instance.new("ScreenGui")
+ local Frame = Instance.new("Frame")
+ local Frame_2 = Instance.new("Frame")
+ local infoguiCLOSE = Instance.new("TextButton")
+ local Frame_3 = Instance.new("Frame")
+ local playerName = Instance.new("TextLabel")
+ local Frame_4 = Instance.new("Frame")
+ local playerAvatar = Instance.new("ImageLabel")
+ local playerAccAge = Instance.new("TextLabel")
+ local playerId = Instance.new("TextLabel")
+ local playerOs = Instance.new("TextLabel")
+ local playerMembership = Instance.new("TextLabel")
+ local Frame_5 = Instance.new("Frame")
+ local Frame_6 = Instance.new("Frame")
+ InfoGUIv2.Name = "InfoGUIv2"
+ InfoGUIv2.Parent = game.Players.LocalPlayer.PlayerGui
+ InfoGUIv2.ResetOnSpawn = false
+ Frame.Parent = InfoGUIv2
+ Frame.BackgroundColor3 = Color3.new(0, 0, 0)
+ Frame.BackgroundTransparency = 1
+ Frame.BorderColor3 = Color3.new(0, 0, 0)
+ Frame.ClipsDescendants = true
+ Frame.Position = UDim2.new(0.45, 0, 1, 0)
+ Frame.Size = UDim2.new(0, 265, 0, 302)
+ Frame.ZIndex = -1
+ Frame_2.Parent = Frame
+ Frame_2.BackgroundColor3 = Color3.new(0.290196, 0, 0.447059)
+ Frame_2.BorderSizePixel = 0
+ Frame_2.Size = UDim2.new(0, 260, 0, 20)
+ infoguiCLOSE.Name = "infoguiCLOSE"
+ infoguiCLOSE.Parent = Frame_2
+ infoguiCLOSE.BackgroundColor3 = Color3.new(1, 1, 1)
+ infoguiCLOSE.BackgroundTransparency = 1
+ infoguiCLOSE.BorderSizePixel = 0
+ infoguiCLOSE.Position = UDim2.new(0, 230, 0, 0)
+ infoguiCLOSE.Size = UDim2.new(0, 30, 0, 20)
+ infoguiCLOSE.Font = Enum.Font.SourceSansBold
+ infoguiCLOSE.Text = "X"
+ infoguiCLOSE.TextColor3 = Color3.new(0.992157, 0.992157, 0.992157)
+ infoguiCLOSE.TextSize = 20
+ Frame_3.Parent = Frame
+ Frame_3.BackgroundColor3 = Color3.new(0.482353, 0.121569, 0.635294)
+ Frame_3.BorderSizePixel = 0
+ Frame_3.Position = UDim2.new(0, 0, 0, 20)
+ Frame_3.Size = UDim2.new(0, 260, 0, 40)
+ playerName.Name = "playerName"
+ playerName.Parent = Frame_3
+ playerName.BackgroundColor3 = Color3.new(1, 1, 1)
+ playerName.BackgroundTransparency = 1
+ playerName.Position = UDim2.new(0, 10, 0, 5)
+ playerName.Size = UDim2.new(0, 240, 0, 30)
+ playerName.Font = Enum.Font.SourceSansLight
+ playerName.Text = player.Name
+ playerName.TextColor3 = Color3.new(0.988235, 0.988235, 0.988235)
+ playerName.TextScaled = true
+ playerName.TextSize = 14
+ playerName.TextWrapped = true
+ Frame_4.Parent = Frame
+ Frame_4.BackgroundColor3 = Color3.new(0.956863, 0.956863, 0.956863)
+ Frame_4.BorderSizePixel = 0
+ Frame_4.Position = UDim2.new(0, 0, 0, 60)
+ Frame_4.Size = UDim2.new(0, 260, 0, 237)
+ playerAvatar.Name = "playerAvatar"
+ playerAvatar.Parent = Frame_4
+ playerAvatar.BackgroundColor3 = Color3.new(1, 1, 1)
+ playerAvatar.Position = UDim2.new(0, 85, 0, 10)
+ playerAvatar.Size = UDim2.new(0, 85, 0, 85)
+ playerAvatar.Image = "http://www.roblox.com/Thumbs/Avatar.ashx?x=150&y=150&Format=Png&username="..player.Name
+ playerAccAge.Name = "playerAccAge"
+ playerAccAge.Parent = Frame_4
+ playerAccAge.BackgroundColor3 = Color3.new(1, 1, 1)
+ playerAccAge.BackgroundTransparency = 1
+ playerAccAge.Position = UDim2.new(0, 5, 0, 101)
+ playerAccAge.Size = UDim2.new(0, 250, 0, 30)
+ playerAccAge.Font = Enum.Font.SourceSans
+ playerAccAge.Text = "Account Age: "..player.AccountAge
+ playerAccAge.TextColor3 = Color3.new(0.0784314, 0.0784314, 0.0784314)
+ playerAccAge.TextScaled = true
+ playerAccAge.TextSize = 14
+ playerAccAge.TextWrapped = true
+ playerId.Name = "playerId"
+ playerId.Parent = Frame_4
+ playerId.BackgroundColor3 = Color3.new(1, 1, 1)
+ playerId.BackgroundTransparency = 1
+ playerId.Position = UDim2.new(0, 5, 0, 131)
+ playerId.Size = UDim2.new(0, 250, 0, 30)
+ playerId.Font = Enum.Font.SourceSans
+ playerId.Text = "Account ID: "..player.UserId
+ playerId.TextColor3 = Color3.new(0.0784314, 0.0784314, 0.0784314)
+ playerId.TextScaled = true
+ playerId.TextSize = 14
+ playerId.TextWrapped = true
+ playerOs.Name = "playerOs"
+ playerOs.Parent = Frame_4
+ playerOs.BackgroundColor3 = Color3.new(1, 1, 1)
+ playerOs.BackgroundTransparency = 1
+ playerOs.Position = UDim2.new(0, 5, 0, 161)
+ playerOs.Size = UDim2.new(0, 250, 0, 30)
+ playerOs.Font = Enum.Font.SourceSansLight
+ playerOs.Text = "Player OS: "..player.OsPlatform
+ playerOs.TextColor3 = Color3.new(0.0784314, 0.0784314, 0.0784314)
+ playerOs.TextScaled = true
+ playerOs.TextSize = 14
+ playerOs.TextWrapped = true
+ playerMembership.Name = "playerMembership"
+ playerMembership.Parent = Frame_4
+ playerMembership.BackgroundColor3 = Color3.new(1, 1, 1)
+ playerMembership.BackgroundTransparency = 1
+ playerMembership.Position = UDim2.new(0, 5, 0, 191)
+ playerMembership.Size = UDim2.new(0, 250, 0, 30)
+ playerMembership.Font = Enum.Font.SourceSansLight
+ if player.MembershipType == Enum.MembershipType.None then
+  playerMembership.Text = "No builder's club."
+ elseif player.MembershipType == Enum.MembershipType.BuildersClub then
+  playerMembership.Text = "Builder's club!"
+ elseif player.MembershipType == Enum.MembershipType.TurboBuildersClub then
+  playerMembership.Text = "Turbo Builder's club!"
+ elseif player.MembershipType == Enum.MembershipType.OutrageousBuildersClub then
+  playerMembership.Text = "Outrageous Builder's club!"
+ end
+ playerMembership.TextColor3 = Color3.new(0.0784314, 0.0784314, 0.0784314)
+ playerMembership.TextScaled = true
+ playerMembership.TextSize = 14
+ playerMembership.TextWrapped = true
+ Frame_5.Parent = Frame
+ Frame_5.BackgroundColor3 = Color3.new(0, 0, 0)
+ Frame_5.BackgroundTransparency = 0.69999998807907
+ Frame_5.BorderColor3 = Color3.new(0, 0, 0)
+ Frame_5.BorderSizePixel = 0
+ Frame_5.ClipsDescendants = true
+ Frame_5.Position = UDim2.new(0, 10, 0, 10)
+ Frame_5.Selectable = true
+ Frame_5.Size = UDim2.new(0, 255, 0, 292)
+ Frame_5.ZIndex = -1
+ Frame_6.Parent = Frame
+ Frame_6.BackgroundColor3 = Color3.new(0, 0, 0)
+ Frame_6.BackgroundTransparency = 0.69999998807907
+ Frame_6.BorderColor3 = Color3.new(0, 0, 0)
+ Frame_6.BorderSizePixel = 0
+ Frame_6.ClipsDescendants = true
+ Frame_6.Position = UDim2.new(0, 8, 0, 8)
+ Frame_6.Selectable = true
+ Frame_6.Size = UDim2.new(0, 255, 0, 292)
+ Frame_6.ZIndex = -1
+ local closeGet = {}
+ closeGet.Size = UDim2.new(0, 0, 0, 0)
+ local openGet = {}
+ openGet.Position = UDim2.new(0.45, 0, 0.45, 0)
+ local closeFunction = gsTween:Create(Frame, TweenInfo.new(2, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), closeGet)
+ local openFunction = gsTween:Create(Frame, TweenInfo.new(1, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), openGet)
+ infoguiCLOSE.MouseButton1Click:Connect(function()
+  closeFunction:Play()
+  Frame:TweenPosition((Frame.Position + UDim2.new(0, 265 / 2, 0, 302 / 2)), "InOut", "Sine", 2)
+  wait(2.01)
+  Frame:Destroy()
+ end)
+ openFunction:Play()
+ local UserInputService = game:GetService("UserInputService")
+ local dragging
+ local dragInput
+ local dragStart
+ local startPos
+ local function update(input)
+  local delta = input.Position - dragStart
+  local dragTime = 0.055
+  local SmoothDrag = {}
+  SmoothDrag.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+  local dragSmoothFunction = gsTween:Create(Frame, TweenInfo.new(dragTime, Enum.EasingStyle.Sine, Enum.EasingDirection.InOut), SmoothDrag)
+  dragSmoothFunction:Play()
+ end
+ Frame.InputBegan:Connect(function(input)
+  if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+   dragging = true
+   dragStart = input.Position
+   startPos = Frame.Position
+   input.Changed:Connect(function()
+    if input.UserInputState == Enum.UserInputState.End then
+     dragging = false
+    end
+   end)
+  end
+ end)
+ Frame.InputChanged:Connect(function(input)
+  if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+   dragInput = input
+  end
+ end)
+ UserInputService.InputChanged:Connect(function(input)
+  if input == dragInput and dragging and Frame.Size == UDim2.new(0, 265, 0, 302) then
+   update(input)
+  end
+ end)
+end
+function clientSided()
+ Notification("info", "This command is for the client (you) only, no one else can see!", 6)
+end
+searchCmds={"1 print [msg] - Prints a message to the developer console","2 warn [msg] - Warns a message to the developer console","3 sit - Makes you sit","4 god - Activates FE Godmode (breaks tools)","5 view [plr] - Changes your camera subject to another player","6 unview - Changes your camera back to your player","7 gravity [num] - Changes workspace gravity to [num]","8 ungravity - Reverts workspace gravity to game's default","9 goto [plr] - Teleports you to a player","10 fecheck - Checks whether the game is FE or not","11 lockws - Locks the whole workspace","12 unlockws - Unlocks the whole workspace","13 noclip - Allows you to walk through walls and other objects","14 clip - Stops noclip, can collide","15 follow [plr] / [num] - Makes you follow a player constantly, optional [num] for how far away to follow","16 unfollow - Stops you from following","17 fling [plr] / [pow] - Uses your character to fling a player, optional [pow] for how much power to put into the fling","18 unfling - Stops you from flinging","19 trail [plr] / [num] - Makes you trail (walk infront) of a player constantly, optional [num] for how far away to trail","20 untrail - Stops you from trailing","21 annoy [plr] - Loop teleports you to the player","22 unannoy - Stops loop teleporting you","23 reset - Resets your character","24 grespawn - Respawns your character, best for use after FE godmode","25 respawn - Respawns your character, best to use if grespawn fails to work","26 speed // ws [num] - Changes your walkspeed (speed or ws) to [num]","27 jumppower // jp [num] - Changes your jumppower (jumppower or jp) to [num]","28 hipheight // hh [num] - Changes your hipheight (hipheight or hh) to [num]","29 default - Changes your walkspeed, jumppower and hipheight back to normal","30 credits - Displays admin credits (by illremember#3799)","31 attach [plr] - Attaches you to a player, tool required","32 fly / [speed] - Enables fly, optional [speed] for how fast to fly","33 unfly - Disables fly","34 kill [plr] - Kills a player, tool required","35 bring [plr] - Brings a player, tool required","36 naked - Displays avatar body colours","37 nolimbs - Deletes all your arms and legs","38 noarms - Deletes both your arms","39 nolegs - Deletes both your legs","40 antikick [on/off] - Blocks all remotes for antikick when on, disables when off","41 blockremote [remote] / [service] - Blocks a remote from firing, optional [service] for where the remote is located","42 remotespy [on/off] - Prints all remotes to developer console when on when fired, stops printing when off","43 bang [plr] / [speed] - Bangs a player, optional [speed] to set animation adjust speed","44 unbang - Stops bang player","45 spam [msg] - Spams [msg] in chat","46 spamdelay [num] - Sets how long to wait in between spamming","47 unspam - Stops spamming","48 info [plr] - Creates GUI with information about player account, shows Account age, membership and account ID","49 age [plr] - Chats account age of player","50 invisible - Enables FE invisibility, by Timeless","51 walk [plr] - Begins to make you loop walk towards player","52 glitch [plr] / [num] - Glitches a player, tool required, optional [num] for strength of glitch","53 tp [plr] [plr] - Teleports a pla
